@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EurosHub - Project Tracking Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .form-section {
+      transition: all 0.3s ease;
+    }
+    .form-section:hover {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      ring: 2px;
+      ring-color: rgba(14, 165, 233, 0.5);
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <div class="max-w-4xl mx-auto my-8 lg:my-12 bg-white rounded-xl shadow-md overflow-hidden">
+    <!-- Header Section -->
+    <div class="bg-primary-700 p-6 text-white">
+      <div class="flex items-center justify-between">
+        <div>
+          <img src="https://via.placeholder.com/180x50?text=EUROSHUB&color=ffffff&bg=0ea5e9" alt="EurosHub Logo" class="h-10">
+          <h1 class="mt-2 text-2xl font-bold">Project Time Tracking</h1>
+          <p class="text-primary-100">Track your project hours efficiently</p>
+        </div>
+        <div class="hidden md:block">
+          <i class="fas fa-clock text-4xl opacity-20"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Container -->
+    <form id="projectForm" class="divide-y divide-gray-200">
+      <!-- Basic Information Section -->
+      <div class="form-section p-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <i class="fas fa-user-circle mr-2 text-primary-600"></i>
+          Basic Information
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <input type="email" name="email" required 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                placeholder="your@email.com">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-envelope text-gray-400"></i>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Profile Name <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <select name="profileName" required 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 appearance-none">
+                <option value="">Select your profile</option>
+                <option>Asif</option><option>Kainat</option><option>Laiba</option><option>Saira</option>
+                <option>Waqar</option><option>Nabeel</option><option>Syeda</option><option>Zain</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-chevron-down text-gray-400"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Time Tracking Section -->
+      <div class="form-section p-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <i class="fas fa-stopwatch mr-2 text-primary-600"></i>
+          Time Details
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Total Time</label>
+            <div class="relative">
+              <input type="text" name="trackingTime" placeholder="HH:MM (e.g. 7:30)" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-hourglass-half text-gray-400"></i>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Date <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <input type="date" name="trackingDate" required 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-calendar-alt text-gray-400"></i>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Team Member <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <select name="teamMember" required 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 appearance-none">
+                <option value="">Select team member</option>
+                <option>Ahmad Ali</option><option>Ahsan Munir</option><option>Ali Rayyan</option><option>Hamza Badar</option>
+                <option>Hamza Ikram</option><option>Mahnoor Manzoor</option><option>Mohsin Ali</option><option>Muhammad Bilal</option>
+                <option>Muhammad Uzaam Liaqat</option><option>Shahroze Shahid</option><option>Syeda Alina Zahra</option>
+                <option>Tabassum Munir</option><option>Zainab</option><option>Zohaib Tasaddaq</option><option>Hammad Amir</option>
+                <option>Muhammad Usman</option><option>Fatima Hafeez</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-users text-gray-400"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Start Time <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <input type="time" name="startTime" required 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-clock text-gray-400"></i>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">End Time <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <input type="time" name="endTime" required 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-clock text-gray-400"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project Details Section -->
+      <div class="form-section p-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <i class="fas fa-project-diagram mr-2 text-primary-600"></i>
+          Project Details
+        </h2>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Memo / Description</label>
+          <textarea name="memo" rows="3" 
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" 
+            placeholder="Project name and additional details..."></textarea>
+        </div>
+      </div>
+
+      <!-- Preview Section -->
+      <div id="splitResult" class="hidden p-6 bg-gray-50">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <i class="fas fa-eye mr-2 text-primary-600"></i>
+          Time Entries Preview
+        </h2>
+        <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-100">
+              <tr>
+                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member</th>
+                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project</th>
+              </tr>
+            </thead>
+            <tbody id="splitEntriesBody" class="bg-white divide-y divide-gray-200">
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-4 text-sm text-gray-500">
+          <i class="fas fa-info-circle mr-1"></i> This preview shows how your time will be split across days.
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="p-6 bg-gray-50">
+        <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
+          <button type="button" id="previewBtn" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+            <i class="fas fa-search mr-2"></i> Preview
+          </button>
+          <button type="submit" class="px-6 py-2 border border-transparent rounded-lg shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500">
+            <i class="fas fa-paper-plane mr-2"></i> Submit Time
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Success Message -->
+    <div id="thankYouMsg" class="hidden p-6 bg-green-50 border-t border-green-200">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-green-800">Successfully submitted!</h3>
+          <p class="text-sm text-green-600 mt-1">Your time entries have been recorded.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyeammFzntCB5cKpenFVYe45PwYn437ImPspextFZBjf4uE7oNuuRXlcVo4-O59hKYc/exec";
+    const form = document.getElementById("projectForm");
+    const previewBtn = document.getElementById("previewBtn");
+
+    // Format time to HH:MM
+    function formatTime(timeString) {
+      if (!timeString) return '';
+      const [hours, minutes] = timeString.split(':');
+      return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    }
+
+    // Calculate duration between two times
+    function calculateDuration(start, end) {
+      if (!start || !end) return '';
+      
+      const startDate = new Date(`2000-01-01T${start}`);
+      const endDate = new Date(`2000-01-01T${end}`);
+      
+      // Handle overnight case
+      if (endDate < startDate) {
+        endDate.setDate(endDate.getDate() + 1);
+      }
+      
+      const diffMs = endDate - startDate;
+      const diffHrs = Math.floor(diffMs / 3600000);
+      const diffMins = Math.round((diffMs % 3600000) / 60000);
+      
+      return `${diffHrs}h ${diffMins}m`;
+    }
+
+    function splitTimeAcrossDates(userId, startDate, startTime, endTime) {
+      const result = [];
+      const startDateTime = new Date(startDate + 'T' + startTime);
+      let endDateTime = new Date(startDate + 'T' + endTime);
+
+      if (endDateTime <= startDateTime) {
+        endDateTime.setDate(endDateTime.getDate() + 1);
+      }
+
+      const currentStart = new Date(startDateTime);
+
+      while (startDateTime.toDateString() !== endDateTime.toDateString()) {
+        const nextDay = new Date(startDateTime);
+        nextDay.setDate(nextDay.getDate() + 1);
+        nextDay.setHours(0, 0, 0, 0);
+
+        result.push({
+          userId: userId,
+          date: startDateTime.toISOString().split('T')[0],
+          from: currentStart.toTimeString().slice(0, 5),
+          to: "23:59",
+          duration: calculateDuration(currentStart.toTimeString().slice(0, 5), "23:59")
+        });
+
+        startDateTime.setDate(startDateTime.getDate() + 1);
+        startDateTime.setHours(0, 0);
+        currentStart.setDate(currentStart.getDate() + 1);
+        currentStart.setHours(0, 0);
+      }
+
+      result.push({
+        userId: userId,
+        date: startDateTime.toISOString().split('T')[0],
+        from: currentStart.toTimeString().slice(0, 5),
+        to: endDateTime.toTimeString().slice(0, 5),
+        duration: calculateDuration(currentStart.toTimeString().slice(0, 5), endDateTime.toTimeString().slice(0, 5))
+      });
+
+      return result;
+    }
+
+    // Preview functionality
+    previewBtn.addEventListener("click", function() {
+      const userId = form.teamMember.value;
+      const trackingDate = form.trackingDate.value;
+      const startTime = form.startTime.value;
+      const endTime = form.endTime.value;
+      
+      if (!userId || !trackingDate || !startTime || !endTime) {
+        alert('Please fill all required fields before previewing');
+        return;
+      }
+      
+      const splitEntries = splitTimeAcrossDates(userId, trackingDate, startTime, endTime);
+
+      // Update table preview
+      const tableBody = document.getElementById("splitEntriesBody");
+      tableBody.innerHTML = "";
+      
+      splitEntries.forEach(entry => {
+        const row = document.createElement("tr");
+        row.className = "hover:bg-gray-50";
+        row.innerHTML = `
+          <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">${entry.date}</td>
+          <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+            <span class="font-medium">${entry.from} - ${entry.to}</span>
+            <span class="block text-xs text-gray-400">${entry.duration}</span>
+          </td>
+          <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">${userId}</td>
+          <td class="px-4 py-3 text-sm text-gray-500">${form.memo.value || 'No description'}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+      
+      document.getElementById("splitResult").classList.remove("hidden");
+    });
+
+    // Form submission
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Submitting...';
+
+      try {
+        const userId = form.teamMember.value;
+        const trackingDate = form.trackingDate.value;
+        const startTime = form.startTime.value;
+        const endTime = form.endTime.value;
+        const splitEntries = splitTimeAcrossDates(userId, trackingDate, startTime, endTime);
+
+        // Submit each split entry to Google Sheet
+        for (const entry of splitEntries) {
+          const formData = new FormData();
+          formData.append("email", form.email.value);
+          formData.append("profileName", form.profileName.value);
+          formData.append("trackingTime", form.trackingTime.value);
+          formData.append("memo", form.memo.value);
+          formData.append("originalDate", trackingDate);
+          formData.append("startTime", startTime);
+          formData.append("endTime", endTime);
+          formData.append("teamMember", userId);
+          formData.append("splitDate", entry.date);
+          formData.append("splitFrom", entry.from);
+          formData.append("splitTo", entry.to);
+
+          await fetch(scriptURL, {
+            method: "POST",
+            body: formData
+          });
+        }
+
+        // Show success message
+        document.getElementById("thankYouMsg").classList.remove("hidden");
+        form.reset();
+        document.getElementById("splitResult").classList.add("hidden");
+        
+        // Scroll to success message
+        document.getElementById("thankYouMsg").scrollIntoView({ behavior: 'smooth' });
+        
+      } catch (error) {
+        console.error('Submission error:', error);
+        alert('Error submitting form: ' + error.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Submit Time';
+      }
+    });
+
+    // Set default date to today
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date().toISOString().split('T')[0];
+      form.trackingDate.value = today;
+    });
+  </script>
+</body>
+</html>
