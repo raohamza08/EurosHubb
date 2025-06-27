@@ -158,7 +158,7 @@
           return h * 60 + m;
         };
         const mins = parse(end) - parse(start);
-        return `${Math.floor(mins / 60)}h ${mins % 60}m`;
+        return `${Math.floor(mins / 60)} : ${mins % 60}`;
       };
 
       $('#submitBtn').click(function () {
