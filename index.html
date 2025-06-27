@@ -352,6 +352,9 @@
       const DATA_API_URL = "https://script.google.com/macros/s/AKfycbyxW9vv6vG0daYJeqa-RlA0XDpQKL7DPgBTgvxJ56PajAAQdNTOJfsuYQ62JWaOHtdv/exec";
       const SUBMIT_API_URL = "https://script.google.com/macros/s/AKfycbyxW9vv6vG0daYJeqa-RlA0XDpQKL7DPgBTgvxJ56PajAAQdNTOJfsuYQ62JWaOHtdv/exec";
       
+      // Track if form is submitting to prevent multiple submissions
+      let isSubmitting = false;
+
       function populateDropdowns() {
         $.get(DATA_API_URL, function (response) {
           const data = typeof response === 'string' ? JSON.parse(response) : response;
@@ -427,6 +430,8 @@
       };
 
       $('#submitBtn').click(function () {
+        if (isSubmitting) return; // Prevent multiple submissions
+        
         let valid = true;
         $('#profileName, #projectName, #projectTime, #trackingDate, #startTime, #endTime, #teamMember').each(function () {
           const $this = $(this);
@@ -444,6 +449,12 @@
 
         if (!valid) return;
 
+        // Immediately show thank you message and disable button
+        isSubmitting = true;
+        $('#formArea').hide();
+        $('#thankYouMessage').show();
+        $('#submitBtn').prop('disabled', true).html('<span>Submitting...</span><i class="fas fa-spinner fa-spin"></i>');
+
         const payload = {
           profileName: $('#profileName').val(),
           projectName: $('#projectName').val(),
@@ -455,15 +466,20 @@
           totalTime: $('#totalTimeLabel').text(),
           teamMember: $('#teamMember').val()
         };
+        
         $.ajax({
           url: SUBMIT_API_URL + "?" + new URLSearchParams(payload).toString(),
           method: "GET",
           success: function () {
-            $('#formArea').hide();
-            $('#thankYouMessage').show();
+            // Success - already showing thank you message
           },
           error: function (err) {
             console.error("Submission error:", err);
+            // Show error but keep thank you message visible
+            $('#thankYouMessage .thank-you-text').html('Your submission was recorded, but there was a minor issue processing it.');
+          },
+          complete: function() {
+            isSubmitting = false;
           }
         });
       });
@@ -481,6 +497,7 @@
       $('#thankYouMessage').hide();
       $('#totalTimeLabel').text('--');
       $('#endTime').empty().append(new Option("Select End Time", "", true, true));
+      $('#submitBtn').prop('disabled', false).html('<span>Submit Time Entry</span><i class="fas fa-paper-plane"></i>');
     }
   </script>
 </body>
