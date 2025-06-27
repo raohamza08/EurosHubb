@@ -163,7 +163,7 @@
 
       $('#submitBtn').click(function () {
         let valid = true;
-        $('#profileName, #projectName, #projectTime, #trackingDate, #startTime, #endTime, #teamMember').each(function () {
+        $('#profileName, #projectName, #projectTime, #memo, #trackingDate, #startTime, #endTime, #teamMember').each(function () {
           const $this = $(this);
           if (!$this.val()) {
             $this.next('.select2-container').length
