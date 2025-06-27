@@ -1,105 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Project Time Tracking Form</title>
+  <meta charset="UTF-8" />
+  <title>Project Time Tracker | EurosHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #f1f3f6; padding: 30px; }
-    .container { background: #fff; max-width: 800px; margin: auto; padding: 30px 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
-    .tiny-reset { font-size: 14px; cursor: pointer; background: none; border: none; color: #666; padding: 4px; margin-top: 3px; height: 40px; }
-    h2 { text-align: center; color: #333; margin-bottom: 25px; }
-    label { display: block; margin-top: 15px; margin-bottom: 5px; font-weight: 600; color: #555; }
-    select, input[type="text"], input[type="date"], textarea {
-      width: 100%; box-sizing: border-box; padding: 10px; font-size: 15px;
-      border: 1px solid #ccc; border-radius: 6px; background-color: #fafafa;
+    :root {
+      --primary: #063a53;
+      --secondary: #0fb8af;
+      --accent: #ff7e5f;
+      --white: #ffffff;
+      --light: #f8f9fa;
+      --dark: #2d3436;
+      --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease-in-out;
     }
-    .invalid { border: 2px solid red !important; }
-    .valid { border: 2px solid green !important; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e2e8f0 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: var(--dark);
+    }
+
+    .glass-container {
+      max-width: 720px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 40px 30px;
+      margin: 40px auto;
+    }
+
+    .logo-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      height: 55px;
+    }
+
+    .brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .form-subtitle {
+      font-size: 14px;
+      color: #6c757d;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    label {
+      font-size: 14px;
+      color: var(--primary);
+      font-weight: 500;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    label i {
+  color: #00bfa6;
+  font-size: 18px; /* or 16px, depending on your form layout */
+}
+
+    select,
+    input[type="text"],
+    input[type="date"],
+    textarea {
+      padding: 13px 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      background: var(--white);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: var(--transition);
+    }
+
+    select:focus,
+    input:focus,
+    textarea:focus {
+      border-color: var(--secondary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(15, 184, 175, 0.2);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
     .readonly-label {
-      padding: 10px; background-color: #e9f5e9; border: 1px solid #cce5cc;
-      border-radius: 6px; margin-top: 5px; font-size: 16px; color: #2e7d32;
+      padding: 13px 15px;
+      background-color: rgba(15, 184, 175, 0.1);
+      border: 1px solid rgba(15, 184, 175, 0.3);
+      border-radius: 12px;
+      font-size: 14px;
+      color: var(--primary);
+      min-height: 50px;
+      display: flex;
+      align-items: center;
     }
-    .button-row { display: flex; align-items: center; gap: 10px; margin-top: 25px; }
+
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+      gap: 15px;
+    }
+
+    #submitBtn,
+    #resetBtn {
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
     #submitBtn {
-      flex-grow: 1; padding: 12px; font-size: 16px;
-      background: #0069d9; color: white; border: none; border-radius: 6px; cursor: pointer;
+      background: var(--primary);
+      color: white;
+      border: none;
     }
-    #submitBtn:hover { background: #0053b3; }
-    .thank-you-message {
-      display: none; text-align: center; font-size: 18px; margin-top: 20px; color: green;
+
+    #submitBtn:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
     }
-    .thank-you-message button {
-      padding: 10px 18px; font-size: 15px; margin-top: 15px;
-      border: none; background-color: #28a745; color: #fff; border-radius: 5px; cursor: pointer;
+
+    #resetBtn {
+      background: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
     }
-    .thank-you-message button:hover { background-color: #218838; }
+
+    #resetBtn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .select2-container .select2-selection {
+      height: 48px !important;
+      border-radius: 12px !important;
+      border: 1px solid #e0e0e0 !important;
+      padding: 6px 12px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      line-height: 34px !important;
+    }
+
+    @media (max-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full-width {
+        grid-column: 1;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Project Time Tracking Form</h2>
-    <div id="formArea">
 
-      <label for="profileName">Profile Name *</label>
-      <select id="profileName"><option value="" disabled selected>Select Profile</option></select>
-
-      <label for="projectName">Project Name *</label>
-      <select id="projectName"><option value="" disabled selected>Select Project</option></select>
-
-      <label for="projectTime">Project Tracking Time *</label>
-      <input type="text" id="projectTime" placeholder="hh:mm (duration only)">
-
-      <label for="memo">Memo</label>
-      <textarea id="memo" rows="3" placeholder="If Manual Time, Please add Project Name & memo"></textarea>
-
-      <label for="trackingDate">Tracking Date *</label>
-      <input type="date" id="trackingDate">
-
-      <label for="startTime">Tracking Start Time *</label>
-      <select id="startTime"><option value="" disabled selected>Select Start Time</option></select>
-
-      <label for="endTime">Tracking End Time *</label>
-      <select id="endTime"><option value="" disabled selected>Select End Time</option></select>
-
-      <label>Total Time:</label>
-      <div class="readonly-label" id="totalTimeLabel">--</div>
-
-      <label for="teamMember">Team Member Name *</label>
-      <select id="teamMember"><option value="" disabled selected>Select Team Member</option></select>
-
-      <div class="button-row">
-        <button id="submitBtn">Submit</button>
-        <button type="button" class="tiny-reset" id="resetBtn" title="Reset Form">🔁</button>
-      </div>
+  <div class="glass-container">
+    <div class="logo-header">
+      <img src="https://raw.githubusercontent.com/raohamza08/EurosHub/main/EurosHub.png" class="logo" alt="EurosHub Logo">
+      <div class="brand-name">EurosHub</div>
+    </div>
+    <div class="form-header">
+      <h2 class="form-title">Time Entry Form</h2>
+      <p class="form-subtitle">Please fill in the details below to record your time</p>
     </div>
 
-    <div class="thank-you-message" id="thankYouMessage">
-      ✅ Thank you! Your submission has been recorded.<br><br>
-      <button type="button" onclick="resetForm()">Submit Another Response</button>
+    <div id="formArea">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="profileName"><i class="fas fa-user"></i> Profile Name *</label>
+          <select id="profileName"><option value="" disabled selected>Select Profile</option></select>
+        </div>
+
+        <div class="form-group">
+          <label for="projectName"><i class="fas fa-project-diagram"></i> Project Name *</label>
+          <select id="projectName"><option value="" disabled selected>Select Project</option></select>
+        </div>
+
+        <div class="form-group">
+          <label for="teamMember"><i class="fas fa-users"></i> Team Member *</label>
+          <select id="teamMember"><option value="" disabled selected>Select Team Member</option></select>
+        </div>
+
+        <div class="form-group">
+          <label for="trackingDate"><i class="far fa-calendar-alt"></i> Tracking Date *</label>
+          <input type="date" id="trackingDate">
+        </div>
+
+        <div class="form-group">
+          <label for="startTime"><i class="far fa-clock"></i> Start Time *</label>
+          <select id="startTime"><option value="" disabled selected>Select Start Time</option></select>
+        </div>
+
+        <div class="form-group">
+          <label for="endTime"><i class="far fa-clock"></i> End Time *</label>
+          <select id="endTime"><option value="" disabled selected>Select End Time</option></select>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="projectTime"><i class="fas fa-stopwatch"></i> Project Tracking Time *</label>
+          <input type="text" id="projectTime" placeholder="hh:mm (duration only)">
+        </div>
+
+        <div class="form-group full-width">
+          <label><i class="fas fa-calculator"></i> Total Time:</label>
+          <div class="readonly-label" id="totalTimeLabel">--</div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="memo"><i class="far fa-sticky-note"></i> Memo</label>
+          <textarea id="memo" placeholder="Add any notes about this time entry..."></textarea>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button id="submitBtn">
+          <span>Submit Time Entry</span>
+          <i class="fas fa-paper-plane"></i>
+        </button>
+        <button type="button" id="resetBtn" title="Reset Form">
+          <i class="fas fa-redo"></i>
+        </button>
+      </div>
     </div>
   </div>
 
   <script>
     $(document).ready(function () {
-      const DATA_API_URL = "https://script.google.com/macros/s/AKfycbyxW9vv6vG0daYJeqa-RlA0XDpQKL7DPgBTgvxJ56PajAAQdNTOJfsuYQ62JWaOHtdv/exec"; // Replace with your actual URL
-      const SUBMIT_API_URL = "https://script.google.com/macros/s/AKfycbyxW9vv6vG0daYJeqa-RlA0XDpQKL7DPgBTgvxJ56PajAAQdNTOJfsuYQ62JWaOHtdv/exec";
-      
+      const DATA_API_URL = "https://script.google.com/macros/s/AKfycbxvpmEhv6JLMdCmcEWKzumaXSAE7INyouSJW3Zw6wp6wfZosra1KAucSdsomFCMapCl/exec";
+
       function populateDropdowns() {
         $.get(DATA_API_URL, function (response) {
           const data = typeof response === 'string' ? JSON.parse(response) : response;
-
           $('#profileName').empty().append(new Option("Select Profile", "", true, true));
           data.profileNames.forEach(name => $('#profileName').append(new Option(name, name)));
-
           $('#teamMember').empty().append(new Option("Select Team Member", "", true, true));
           data.teamMembers.forEach(name => $('#teamMember').append(new Option(name, name)));
-
           $('#projectName').empty().append(new Option("Select Project", "", true, true));
           data.projectNames.forEach(name => $('#projectName').append(new Option(name, name)));
-
           $('#profileName, #teamMember, #projectName').select2();
         });
       }
@@ -158,65 +358,16 @@
           return h * 60 + m;
         };
         const mins = parse(end) - parse(start);
-        return `${Math.floor(mins / 60)}:${mins % 60}`;
+        return `${Math.floor(mins / 60)}h ${mins % 60}m`;
       };
 
-      $('#submitBtn').click(function () {
-        let valid = true;
-        $('#profileName, #projectName, #projectTime, #trackingDate, #startTime, #endTime, #teamMember').each(function () {
-          const $this = $(this);
-          if (!$this.val()) {
-            $this.next('.select2-container').length
-              ? $this.next('.select2-container').find('.select2-selection').addClass('invalid')
-              : $this.addClass('invalid');
-            valid = false;
-          } else {
-            $this.next('.select2-container').length
-              ? $this.next('.select2-container').find('.select2-selection').removeClass('invalid').addClass('valid')
-              : $this.removeClass('invalid').addClass('valid');
-          }
-        });
-
-        if (!valid) return;
-
-        const payload = {
-          profileName: $('#profileName').val(),
-          projectName: $('#projectName').val(),
-          projectTime: $('#projectTime').val(),
-          memo: $('#memo').val(),
-          trackingDate: $('#trackingDate').val(),
-          startTime: $('#startTime').val(),
-          endTime: $('#endTime').val(),
-          totalTime: $('#totalTimeLabel').text(),
-          teamMember: $('#teamMember').val()
-        };
-        $.ajax({
-          url: SUBMIT_API_URL + "?" + new URLSearchParams(payload).toString(),
-          method: "GET",
-          success: function () {
-            $('#formArea').hide();
-            $('#thankYouMessage').show();
-          },
-          error: function (err) {
-            console.error("Submission error:", err);
-          }
-        });
-      });
-
       $('#resetBtn').click(function () {
-        resetForm();
+        $('input, textarea').val('');
+        $('select').val('').trigger('change');
+        $('#totalTimeLabel').text('--');
+        $('#endTime').empty().append(new Option("Select End Time", "", true, true));
       });
     });
-
-    function resetForm() {
-      $('input, textarea').val('').removeClass('invalid valid');
-      $('select').val('').trigger('change').removeClass('invalid valid');
-      $('.select2-selection').removeClass('invalid valid');
-      $('#formArea').show();
-      $('#thankYouMessage').hide();
-      $('#totalTimeLabel').text('--');
-      $('#endTime').empty().append(new Option("Select End Time", "", true, true));
-    }
   </script>
 </body>
 </html>
