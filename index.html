@@ -9,6 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --primary: #063a53;
@@ -106,10 +107,11 @@
       align-items: center;
       gap: 8px;
     }
+
     label i {
-  color: #00bfa6;
-  font-size: 18px; /* or 16px, depending on your form layout */
-}
+      color: #00bfa6;
+      font-size: 18px;
+    }
 
     select,
     input[type="text"],
@@ -215,13 +217,14 @@
     }
   </style>
 </head>
-<body>
 
+<body>
   <div class="glass-container">
     <div class="logo-header">
       <img src="https://raw.githubusercontent.com/raohamza08/EurosHub/main/EurosHub.png" class="logo" alt="EurosHub Logo">
       <div class="brand-name">EurosHub</div>
     </div>
+
     <div class="form-header">
       <h2 class="form-title">Time Entry Form</h2>
       <p class="form-subtitle">Please fill in the details below to record your time</p>
@@ -233,42 +236,34 @@
           <label for="profileName"><i class="fas fa-user"></i> Profile Name *</label>
           <select id="profileName"><option value="" disabled selected>Select Profile</option></select>
         </div>
-
         <div class="form-group">
           <label for="projectName"><i class="fas fa-project-diagram"></i> Project Name *</label>
           <select id="projectName"><option value="" disabled selected>Select Project</option></select>
         </div>
-
         <div class="form-group">
           <label for="teamMember"><i class="fas fa-users"></i> Team Member *</label>
           <select id="teamMember"><option value="" disabled selected>Select Team Member</option></select>
         </div>
-
         <div class="form-group">
           <label for="trackingDate"><i class="far fa-calendar-alt"></i> Tracking Date *</label>
           <input type="date" id="trackingDate">
         </div>
-
         <div class="form-group">
           <label for="startTime"><i class="far fa-clock"></i> Start Time *</label>
           <select id="startTime"><option value="" disabled selected>Select Start Time</option></select>
         </div>
-
         <div class="form-group">
           <label for="endTime"><i class="far fa-clock"></i> End Time *</label>
           <select id="endTime"><option value="" disabled selected>Select End Time</option></select>
         </div>
-
         <div class="form-group full-width">
           <label for="projectTime"><i class="fas fa-stopwatch"></i> Project Tracking Time *</label>
           <input type="text" id="projectTime" placeholder="hh:mm (duration only)">
         </div>
-
         <div class="form-group full-width">
           <label><i class="fas fa-calculator"></i> Total Time:</label>
           <div class="readonly-label" id="totalTimeLabel">--</div>
         </div>
-
         <div class="form-group full-width">
           <label for="memo"><i class="far fa-sticky-note"></i> Memo</label>
           <textarea id="memo" placeholder="Add any notes about this time entry..."></textarea>
@@ -276,23 +271,18 @@
       </div>
 
       <div class="button-row">
-        <button id="submitBtn">
-          <span>Submit Time Entry</span>
-          <i class="fas fa-paper-plane"></i>
-        </button>
-        <button type="button" id="resetBtn" title="Reset Form">
-          <i class="fas fa-redo"></i>
-        </button>
+        <button id="submitBtn"><span>Submit Time Entry</span><i class="fas fa-paper-plane"></i></button>
+        <button type="button" id="resetBtn" title="Reset Form"><i class="fas fa-redo"></i></button>
       </div>
     </div>
   </div>
 
   <script>
     $(document).ready(function () {
-      const DATA_API_URL = "https://script.google.com/macros/s/AKfycbyxW9vv6vG0daYJeqa-RlA0XDpQKL7DPgBTgvxJ56PajAAQdNTOJfsuYQ62JWaOHtdv/exec";
+      const API_URL = "https://script.google.com/macros/s/AKfycbyxW9vv6vG0daYJeqa-RlA0XDpQKL7DPgBTgvxJ56PajAAQdNTOJfsuYQ62JWaOHtdv/exec";
 
       function populateDropdowns() {
-        $.get(DATA_API_URL, function (response) {
+        $.get(API_URL, function (response) {
           const data = typeof response === 'string' ? JSON.parse(response) : response;
           $('#profileName').empty().append(new Option("Select Profile", "", true, true));
           data.profileNames.forEach(name => $('#profileName').append(new Option(name, name)));
@@ -358,8 +348,38 @@
           return h * 60 + m;
         };
         const mins = parse(end) - parse(start);
-        return `${Math.floor(mins / 60)}:${mins % 60}`;
+        return `${Math.floor(mins / 60)}:${(mins % 60).toString().padStart(2, '0')}`;
       };
+
+      $('#submitBtn').click(function (e) {
+        e.preventDefault();
+
+        const payload = {
+          profileName: $('#profileName').val(),
+          projectName: $('#projectName').val(),
+          teamMember: $('#teamMember').val(),
+          trackingDate: $('#trackingDate').val(),
+          startTime: $('#startTime').val(),
+          endTime: $('#endTime').val(),
+          projectTime: $('#projectTime').val(),
+          totalTime: $('#totalTimeLabel').text(),
+          memo: $('#memo').val()
+        };
+
+        if (!payload.profileName || !payload.projectName || !payload.teamMember || !payload.trackingDate || !payload.startTime || !payload.endTime || !payload.projectTime) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+
+        $.post(API_URL, payload)
+          .done(function () {
+            alert("Time entry submitted successfully!");
+            $('#resetBtn').click();
+          })
+          .fail(function () {
+            alert("There was an error submitting the form.");
+          });
+      });
 
       $('#resetBtn').click(function () {
         $('input, textarea').val('');
