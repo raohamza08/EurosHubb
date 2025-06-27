@@ -1,200 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EurosHub - Project Tracking Form</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <title>Project Time Tracking Form</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f1f3f6; padding: 30px; }
+    .container { background: #fff; max-width: 800px; margin: auto; padding: 30px 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+    .tiny-reset { font-size: 14px; cursor: pointer; background: none; border: none; color: #666; padding: 4px; margin-top: 3px; height: 40px; }
+    h2 { text-align: center; color: #333; margin-bottom: 25px; }
+    label { display: block; margin-top: 15px; margin-bottom: 5px; font-weight: 600; color: #555; }
+    select, input[type="text"], input[type="date"], textarea {
+      width: 100%; box-sizing: border-box; padding: 10px; font-size: 15px;
+      border: 1px solid #ccc; border-radius: 6px; background-color: #fafafa;
+    }
+    .invalid { border: 2px solid red !important; }
+    .valid { border: 2px solid green !important; }
+    .readonly-label {
+      padding: 10px; background-color: #e9f5e9; border: 1px solid #cce5cc;
+      border-radius: 6px; margin-top: 5px; font-size: 16px; color: #2e7d32;
+    }
+    .button-row { display: flex; align-items: center; gap: 10px; margin-top: 25px; }
+    #submitBtn {
+      flex-grow: 1; padding: 12px; font-size: 16px;
+      background: #0069d9; color: white; border: none; border-radius: 6px; cursor: pointer;
+    }
+    #submitBtn:hover { background: #0053b3; }
+    .thank-you-message {
+      display: none; text-align: center; font-size: 18px; margin-top: 20px; color: green;
+    }
+    .thank-you-message button {
+      padding: 10px 18px; font-size: 15px; margin-top: 15px;
+      border: none; background-color: #28a745; color: #fff; border-radius: 5px; cursor: pointer;
+    }
+    .thank-you-message button:hover { background-color: #218838; }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body>
+  <div class="container">
+    <h2>Project Time Tracking Form</h2>
+    <div id="formArea">
 
-  <div class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded shadow-lg">
-    <div class="text-center mb-8">
-      <img src="https://via.placeholder.com/150x50?text=EUROSHUB" alt="EurosHub Logo" class="mx-auto mb-2">
-      <h2 class="text-2xl font-bold">EurosHub - Project Tracking Intake Form</h2>
+      <label for="profileName">Profile Name *</label>
+      <select id="profileName"><option value="" disabled selected>Select Profile</option></select>
+
+      <label for="projectName">Project Name *</label>
+      <select id="projectName"><option value="" disabled selected>Select Project</option></select>
+
+      <label for="projectTime">Project Tracking Time *</label>
+      <input type="text" id="projectTime" placeholder="hh:mm (duration only)">
+
+      <label for="memo">Memo</label>
+      <textarea id="memo" rows="3" placeholder="If Manual Time, Please add Project Name & memo"></textarea>
+
+      <label for="trackingDate">Tracking Date *</label>
+      <input type="date" id="trackingDate">
+
+      <label for="startTime">Tracking Start Time *</label>
+      <select id="startTime"><option value="" disabled selected>Select Start Time</option></select>
+
+      <label for="endTime">Tracking End Time *</label>
+      <select id="endTime"><option value="" disabled selected>Select End Time</option></select>
+
+      <label>Total Time:</label>
+      <div class="readonly-label" id="totalTimeLabel">--</div>
+
+      <label for="teamMember">Team Member Name *</label>
+      <select id="teamMember"><option value="" disabled selected>Select Team Member</option></select>
+
+      <div class="button-row">
+        <button id="submitBtn">Submit</button>
+        <button type="button" class="tiny-reset" id="resetBtn" title="Reset Form">🔁</button>
+      </div>
     </div>
 
-    <form id="projectForm" class="space-y-6">
-      <div>
-        <label class="block font-medium">Email *</label>
-        <input type="email" name="email" required class="w-full border rounded px-3 py-2 mt-1" />
-      </div>
-      <div>
-        <label class="block font-medium">Profile Name *</label>
-        <select name="profileName" required class="w-full border rounded px-3 py-2 mt-1">
-          <option value="">Choose</option><option>Asif</option><option>Kainat</option><option>Laiba</option><option>Saira</option>
-          <option>Waqar</option><option>Nabeel</option><option>Syeda</option><option>Zain</option>
-        </select>
-      </div>
-      <div>
-        <label class="block font-medium">Project Tracking Time (Hours:Minutes)</label>
-        <input type="text" name="trackingTime" placeholder="e.g. 7:30" class="w-full border rounded px-3 py-2 mt-1" />
-      </div>
-      <div>
-        <label class="block font-medium">Memo</label>
-        <textarea name="memo" rows="3" placeholder="Project Name & Memo if Manual Time" class="w-full border rounded px-3 py-2 mt-1"></textarea>
-      </div>
-      <div>
-        <label class="block font-medium">Tracking Date *</label>
-        <input type="date" name="trackingDate" required class="w-full border rounded px-3 py-2 mt-1" />
-      </div>
-      <div>
-        <label class="block font-medium">Project Tracking Start Time *</label>
-        <input type="time" name="startTime" required class="w-full border rounded px-3 py-2 mt-1" />
-      </div>
-      <div>
-        <label class="block font-medium">Project Tracking End Time *</label>
-        <input type="time" name="endTime" required class="w-full border rounded px-3 py-2 mt-1" />
-      </div>
-      <div>
-        <label class="block font-medium">Team Member Name *</label>
-        <select name="teamMember" required class="w-full border rounded px-3 py-2 mt-1">
-          <option value="">Choose</option>
-          <option>Ahmad Ali</option><option>Ahsan Munir</option><option>Ali Rayyan</option><option>Hamza Badar</option>
-          <option>Hamza Ikram</option><option>Mahnoor Manzoor</option><option>Mohsin Ali</option><option>Muhammad Bilal</option>
-          <option>Muhammad Uzaam Liaqat</option><option>Shahroze Shahid</option><option>Syeda Alina Zahra</option>
-          <option>Tabassum Munir</option><option>Zainab</option><option>Zohaib Tasaddaq</option><option>Hammad Amir</option>
-          <option>Muhammad Usman</option><option>Fatima Hafeez</option>
-        </select>
-      </div>
-
-      <div id="splitResult" class="hidden mt-6">
-        <h3 class="font-bold mb-2">Time Entries to be Submitted:</h3>
-        <div class="overflow-x-auto">
-          <table class="min-w-full bg-white border">
-            <thead>
-              <tr class="bg-gray-200">
-                <th class="py-2 px-4 border">Email</th>
-                <th class="py-2 px-4 border">Profile</th>
-                <th class="py-2 px-4 border">Time</th>
-                <th class="py-2 px-4 border">Memo</th>
-                <th class="py-2 px-4 border">Original Date</th>
-                <th class="py-2 px-4 border">Start</th>
-                <th class="py-2 px-4 border">End</th>
-                <th class="py-2 px-4 border">Member</th>
-                <th class="py-2 px-4 border">Split Date</th>
-                <th class="py-2 px-4 border">From</th>
-                <th class="py-2 px-4 border">To</th>
-              </tr>
-            </thead>
-            <tbody id="splitEntriesBody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="text-center">
-        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Submit</button>
-      </div>
-    </form>
-
-    <p id="thankYouMsg" class="hidden text-green-600 font-semibold text-center mt-4">✅ Submitted successfully!</p>
+    <div class="thank-you-message" id="thankYouMessage">
+      ✅ Thank you! Your submission has been recorded.<br><br>
+      <button type="button" onclick="resetForm()">Submit Another Response</button>
+    </div>
   </div>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycby41buoUh06P4DcpZMWpz9jMpKit-cFBm0m8EbsUHUolSUQl3a6iBaC5gzYaV4A0F8b/exec"; 
-    const form = document.getElementById("projectForm");
+    $(document).ready(function () {
+      const DATA_API_URL = "https://script.google.com/macros/s/AKfycby6znhAKJUNM854IrUCuP4H-eKwGCOCEjRtlp346l9xaYitiiAddBBsHm5d1ovKwl2J/exec"; // Replace with your actual URL
+      const SUBMIT_API_URL = "https://script.google.com/macros/s/AKfycbwNpv2Goa-XRHJlNuj5TusMCHJIsM7sh5JNQ5o4M8cjG2nhs6mDqCjpj5ZL5-M3YcYW/exec";
+      
+      function populateDropdowns() {
+        $.get(DATA_API_URL, function (response) {
+          const data = typeof response === 'string' ? JSON.parse(response) : response;
 
-    function splitTimeAcrossDates(userId, startDate, startTime, endTime) {
-      const result = [];
-      const startDateTime = new Date(startDate + 'T' + startTime);
-      let endDateTime = new Date(startDate + 'T' + endTime);
+          $('#profileName').empty().append(new Option("Select Profile", "", true, true));
+          data.profileNames.forEach(name => $('#profileName').append(new Option(name, name)));
 
-      if (endDateTime <= startDateTime) {
-        endDateTime.setDate(endDateTime.getDate() + 1);
-      }
+          $('#teamMember').empty().append(new Option("Select Team Member", "", true, true));
+          data.teamMembers.forEach(name => $('#teamMember').append(new Option(name, name)));
 
-      const currentStart = new Date(startDateTime);
+          $('#projectName').empty().append(new Option("Select Project", "", true, true));
+          data.projectNames.forEach(name => $('#projectName').append(new Option(name, name)));
 
-      while (startDateTime.toDateString() !== endDateTime.toDateString()) {
-        result.push({
-          userId: userId,
-          date: startDateTime.toISOString().split('T')[0],
-          from: currentStart.toTimeString().slice(0, 5),
-          to: "23:59"
+          $('#profileName, #teamMember, #projectName').select2();
         });
-
-        startDateTime.setDate(startDateTime.getDate() + 1);
-        startDateTime.setHours(0, 0);
-        currentStart.setDate(currentStart.getDate() + 1);
-        currentStart.setHours(0, 0);
       }
 
-      result.push({
-        userId: userId,
-        date: startDateTime.toISOString().split('T')[0],
-        from: currentStart.toTimeString().slice(0, 5),
-        to: endDateTime.toTimeString().slice(0, 5)
+      populateDropdowns();
+
+      const startSelect = $('#startTime');
+      const endSelect = $('#endTime');
+      const totalTimeLabel = $('#totalTimeLabel');
+
+      const generateTimeSlots = () => {
+        const slots = [];
+        const current = new Date();
+        current.setHours(0, 0, 0, 0);
+        for (let i = 0; i < 143; i++) {
+          slots.push(formatTime(current));
+          current.setMinutes(current.getMinutes() + 10);
+        }
+        slots.push("11:59:59 PM");
+        return slots;
+      };
+
+      const formatTime = (date) => {
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12;
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+      };
+
+      const timeSlots = generateTimeSlots();
+      timeSlots.forEach(t => startSelect.append(new Option(t, t)));
+
+      startSelect.on('change', function () {
+        const selectedIndex = timeSlots.indexOf($(this).val());
+        endSelect.empty().append(new Option("Select End Time", "", true, true));
+        for (let i = selectedIndex + 1; i < timeSlots.length; i++) {
+          endSelect.append(new Option(timeSlots[i], timeSlots[i]));
+        }
+        totalTimeLabel.text('--');
       });
 
-      return result;
-    }
+      endSelect.on('change', function () {
+        const start = startSelect.val();
+        const end = endSelect.val();
+        if (!start || !end) return totalTimeLabel.text('--');
+        totalTimeLabel.text(calculateTimeDiff(start, end));
+      });
 
-    form.addEventListener("submit", async function (e) {
-      e.preventDefault();
+      const calculateTimeDiff = (start, end) => {
+        const parse = t => {
+          const [hm, ampm] = t.split(' ');
+          let [h, m] = hm.split(':').map(Number);
+          if (ampm === 'PM' && h !== 12) h += 12;
+          if (ampm === 'AM' && h === 12) h = 0;
+          return h * 60 + m;
+        };
+        const mins = parse(end) - parse(start);
+        return `${Math.floor(mins / 60)}h ${mins % 60}m`;
+      };
 
-      const submitBtn = form.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
-
-      try {
-        const userId = form.teamMember.value;
-        const trackingDate = form.trackingDate.value;
-        const startTime = form.startTime.value;
-        const endTime = form.endTime.value;
-        const splitEntries = splitTimeAcrossDates(userId, trackingDate, startTime, endTime);
-
-        // Show preview table
-        const tableBody = document.getElementById("splitEntriesBody");
-        tableBody.innerHTML = "";
-        splitEntries.forEach(entry => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td class="border px-2 py-1">${form.email.value}</td>
-            <td class="border px-2 py-1">${form.profileName.value}</td>
-            <td class="border px-2 py-1">${form.trackingTime.value}</td>
-            <td class="border px-2 py-1">${form.memo.value}</td>
-            <td class="border px-2 py-1">${trackingDate}</td>
-            <td class="border px-2 py-1">${startTime}</td>
-            <td class="border px-2 py-1">${endTime}</td>
-            <td class="border px-2 py-1">${userId}</td>
-            <td class="border px-2 py-1">${entry.date}</td>
-            <td class="border px-2 py-1">${entry.from}</td>
-            <td class="border px-2 py-1">${entry.to}</td>
-          `;
-          tableBody.appendChild(row);
+      $('#submitBtn').click(function () {
+        let valid = true;
+        $('#profileName, #projectName, #projectTime, #trackingDate, #startTime, #endTime, #teamMember').each(function () {
+          const $this = $(this);
+          if (!$this.val()) {
+            $this.next('.select2-container').length
+              ? $this.next('.select2-container').find('.select2-selection').addClass('invalid')
+              : $this.addClass('invalid');
+            valid = false;
+          } else {
+            $this.next('.select2-container').length
+              ? $this.next('.select2-container').find('.select2-selection').removeClass('invalid').addClass('valid')
+              : $this.removeClass('invalid').addClass('valid');
+          }
         });
-        document.getElementById("splitResult").classList.remove("hidden");
 
-        for (const entry of splitEntries) {
-          const formData = new FormData();
-          formData.append("email", form.email.value);
-          formData.append("profileName", form.profileName.value);
-          formData.append("trackingTime", form.trackingTime.value);
-          formData.append("memo", form.memo.value);
-          formData.append("originalDate", trackingDate);
-          formData.append("startTime", startTime);
-          formData.append("endTime", endTime);
-          formData.append("teamMember", userId);
-          formData.append("splitDate", entry.date);
-          formData.append("splitFrom", entry.from);
-          formData.append("splitTo", entry.to);
+        if (!valid) return;
 
-          await fetch(scriptURL, {
-            method: "POST",
-            body: formData
-          });
-        }
+        const payload = {
+          profileName: $('#profileName').val(),
+          projectName: $('#projectName').val(),
+          projectTime: $('#projectTime').val(),
+          memo: $('#memo').val(),
+          trackingDate: $('#trackingDate').val(),
+          startTime: $('#startTime').val(),
+          endTime: $('#endTime').val(),
+          totalTime: $('#totalTimeLabel').text(),
+          teamMember: $('#teamMember').val()
+        };
+        $.ajax({
+          url: SUBMIT_API_URL + "?" + new URLSearchParams(payload).toString(),
+          method: "GET",
+          success: function () {
+            $('#formArea').hide();
+            $('#thankYouMessage').show();
+          },
+          error: function (err) {
+            console.error("Submission error:", err);
+          }
+        });
+      });
 
-        document.getElementById("thankYouMsg").classList.remove("hidden");
-
-      } catch (error) {
-        console.error('Submission error:', error);
-        alert('Error submitting form: ' + error.message);
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Submit";
-      }
+      $('#resetBtn').click(function () {
+        resetForm();
+      });
     });
+
+    function resetForm() {
+      $('input, textarea').val('').removeClass('invalid valid');
+      $('select').val('').trigger('change').removeClass('invalid valid');
+      $('.select2-selection').removeClass('invalid valid');
+      $('#formArea').show();
+      $('#thankYouMessage').hide();
+      $('#totalTimeLabel').text('--');
+      $('#endTime').empty().append(new Option("Select End Time", "", true, true));
+    }
   </script>
 </body>
 </html>
