@@ -135,6 +135,9 @@
       box-shadow: 0 0 0 3px rgba(15, 184, 175, 0.2);
     }
 
+    .invalid { border: 2px solid red !important; }
+    .valid { border: 2px solid green !important; }
+
     textarea {
       resize: vertical;
       min-height: 100px;
@@ -206,6 +209,56 @@
       line-height: 34px !important;
     }
 
+    /* Thank You Message Styles */
+    .thank-you-message {
+      display: none;
+      text-align: center;
+      padding: 40px 30px;
+      background: rgba(15, 184, 175, 0.1);
+      border-radius: 16px;
+      margin-top: 30px;
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .thank-you-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--primary);
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .thank-you-text {
+      font-size: 16px;
+      color: var(--primary);
+      margin-bottom: 25px;
+    }
+
+    .thank-you-button {
+      padding: 15px 30px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .thank-you-button:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+
     @media (max-width: 640px) {
       .form-grid {
         grid-template-columns: 1fr;
@@ -213,6 +266,14 @@
 
       .full-width {
         grid-column: 1;
+      }
+      
+      .thank-you-message {
+        padding: 30px 20px;
+      }
+      
+      .thank-you-title {
+        font-size: 22px;
       }
     }
   </style>
@@ -269,27 +330,41 @@
           <textarea id="memo" placeholder="Add any notes about this time entry..."></textarea>
         </div>
       </div>
-
+      
       <div class="button-row">
         <button id="submitBtn"><span>Submit Time Entry</span><i class="fas fa-paper-plane"></i></button>
         <button type="button" id="resetBtn" title="Reset Form"><i class="fas fa-redo"></i></button>
       </div>
     </div>
+
+    <div class="thank-you-message" id="thankYouMessage">
+      <h3 class="thank-you-title">Thank You!</h3>
+      <p class="thank-you-text">Your time entry has been successfully recorded.</p>
+      <button class="thank-you-button" onclick="resetForm()">
+        <span>Submit Another Response</span>
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
   </div>
 
   <script>
     $(document).ready(function () {
-      const API_URL = "https://script.google.com/macros/s/AKfycbyxW9vv6vG0daYJeqa-RlA0XDpQKL7DPgBTgvxJ56PajAAQdNTOJfsuYQ62JWaOHtdv/exec";
-
+      const DATA_API_URL = "https://script.google.com/macros/s/AKfycbyxW9vv6vG0daYJeqa-RlA0XDpQKL7DPgBTgvxJ56PajAAQdNTOJfsuYQ62JWaOHtdv/exec";
+      const SUBMIT_API_URL = "https://script.google.com/macros/s/AKfycbyxW9vv6vG0daYJeqa-RlA0XDpQKL7DPgBTgvxJ56PajAAQdNTOJfsuYQ62JWaOHtdv/exec";
+      
       function populateDropdowns() {
-        $.get(API_URL, function (response) {
+        $.get(DATA_API_URL, function (response) {
           const data = typeof response === 'string' ? JSON.parse(response) : response;
+
           $('#profileName').empty().append(new Option("Select Profile", "", true, true));
           data.profileNames.forEach(name => $('#profileName').append(new Option(name, name)));
+
           $('#teamMember').empty().append(new Option("Select Team Member", "", true, true));
           data.teamMembers.forEach(name => $('#teamMember').append(new Option(name, name)));
+
           $('#projectName').empty().append(new Option("Select Project", "", true, true));
           data.projectNames.forEach(name => $('#projectName').append(new Option(name, name)));
+
           $('#profileName, #teamMember, #projectName').select2();
         });
       }
@@ -348,46 +423,65 @@
           return h * 60 + m;
         };
         const mins = parse(end) - parse(start);
-        return `${Math.floor(mins / 60)}:${(mins % 60).toString().padStart(2, '0')}`;
+        return `${Math.floor(mins / 60)}h ${mins % 60}m`;
       };
 
-      $('#submitBtn').click(function (e) {
-        e.preventDefault();
+      $('#submitBtn').click(function () {
+        let valid = true;
+        $('#profileName, #projectName, #projectTime, #trackingDate, #startTime, #endTime, #teamMember').each(function () {
+          const $this = $(this);
+          if (!$this.val()) {
+            $this.next('.select2-container').length
+              ? $this.next('.select2-container').find('.select2-selection').addClass('invalid')
+              : $this.addClass('invalid');
+            valid = false;
+          } else {
+            $this.next('.select2-container').length
+              ? $this.next('.select2-container').find('.select2-selection').removeClass('invalid').addClass('valid')
+              : $this.removeClass('invalid').addClass('valid');
+          }
+        });
+
+        if (!valid) return;
 
         const payload = {
           profileName: $('#profileName').val(),
           projectName: $('#projectName').val(),
-          teamMember: $('#teamMember').val(),
+          projectTime: $('#projectTime').val(),
+          memo: $('#memo').val(),
           trackingDate: $('#trackingDate').val(),
           startTime: $('#startTime').val(),
           endTime: $('#endTime').val(),
-          projectTime: $('#projectTime').val(),
           totalTime: $('#totalTimeLabel').text(),
-          memo: $('#memo').val()
+          teamMember: $('#teamMember').val()
         };
-
-        if (!payload.profileName || !payload.projectName || !payload.teamMember || !payload.trackingDate || !payload.startTime || !payload.endTime || !payload.projectTime) {
-          alert("Please fill in all required fields.");
-          return;
-        }
-
-        $.post(API_URL, payload)
-          .done(function () {
-            alert("Time entry submitted successfully!");
-            $('#resetBtn').click();
-          })
-          .fail(function () {
-            alert("There was an error submitting the form.");
-          });
+        $.ajax({
+          url: SUBMIT_API_URL + "?" + new URLSearchParams(payload).toString(),
+          method: "GET",
+          success: function () {
+            $('#formArea').hide();
+            $('#thankYouMessage').show();
+          },
+          error: function (err) {
+            console.error("Submission error:", err);
+          }
+        });
       });
 
       $('#resetBtn').click(function () {
-        $('input, textarea').val('');
-        $('select').val('').trigger('change');
-        $('#totalTimeLabel').text('--');
-        $('#endTime').empty().append(new Option("Select End Time", "", true, true));
+        resetForm();
       });
     });
+
+    function resetForm() {
+      $('input, textarea').val('').removeClass('invalid valid');
+      $('select').val('').trigger('change').removeClass('invalid valid');
+      $('.select2-selection').removeClass('invalid valid');
+      $('#formArea').show();
+      $('#thankYouMessage').hide();
+      $('#totalTimeLabel').text('--');
+      $('#endTime').empty().append(new Option("Select End Time", "", true, true));
+    }
   </script>
 </body>
 </html>
