@@ -457,7 +457,35 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #063A53;
+      --secondary: #00BFA6;
+      --accent: #FFB200;
+      --light: #F8F9FA;
+      --dark: #1C1C1C;
+      --text-color: #212529;
+      --input-bg: #ffffff;
+      --border-color: #ced4da;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --readonly-bg: rgba(255, 76, 41, 0.1);
+      --readonly-border: rgba(255, 76, 41, 0.3);
+    }
     
+    [data-theme="dark"] {
+      --primary: #00BFA6;
+      --text-color: #f8f9fa;
+      --input-bg: #343a40;
+      --border-color: #495057;
+      --light: #212529;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.25);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.25);
+      --readonly-bg: rgba(13, 110, 253, 0.2);
+      --readonly-border: #0d6efd66;
+    }
     
     body {
       font-family: 'Poppins', sans-serif;
@@ -484,7 +512,9 @@
       transition: var(--transition);
     }
     
-    
+    [data-theme="dark"] .glass-container {
+      background: rgba(33, 37, 41, 0.9);
+    }
     
     .logo-header {
       display: flex;
@@ -854,11 +884,14 @@
           <select id="endTime"><option value="" disabled selected>Select End Time</option></select>
           <i class="fas fa-chevron-down input-icon"></i>
         </div>
+
+
+
          <div class="form-group">
           <i class="fas fa-calculator"></i> Total Time: <span id="totalTimeLabel">0:00</span>
         </div>
         <input type="hidden" name="totalTimeLabel" id="totalTimeLabel">
-            </div>
+      </div>
 
 
 
@@ -1026,10 +1059,13 @@
 
         if (!valid) return;
 
-        isSubmitting = true;
+        isSubmitting = false;
         $('#formArea').hide();
+        $('#projectForm').hide();
         $('#thankYouMessage').removeClass('hidden');
-        $('#submitBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Submitting...');
+        $('#submitBtn').prop('disabled', true)
+        submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Submitting...');
+
 
         const payload = {
           profileName: $('#profileName').val(),
